@@ -1,6 +1,6 @@
 ﻿namespace LuccaConsoleApp
 {
-    internal class RequestProcessor
+    public class RequestProcessor
     {
         private const string wrongFirstLineText = "La première ligne doit avoir le format D1;M;D2 où D1 est le code à trois chiffres de la devise initiale, M est le montant de cette devise initiale sous la forme d'un nombre entier positif et D2 est le code à trois chiffres de la devise cible (ex.: EUR;50;JPY).";
         private const string wrongSecondLineText = "La deuxième ligne doit contenir le nombre de taux de change transmis.";
@@ -9,7 +9,7 @@
         public string TargetCurrency { get; set; }
         public uint InitialAmount { get; set; }
 
-        public List<CurrencyConversionRate> CurrencyConversionList { get; set; } = new List<CurrencyConversionRate>();
+        internal List<CurrencyConversionRate> CurrencyConversionList { get; set; } = new List<CurrencyConversionRate>();
 
         List<ConversionChain> CurrencyConversionChainList { get; set; } = new List<ConversionChain>();
         public RequestProcessor(string[] splittedText)
@@ -25,6 +25,11 @@
 
             // First line
             // Expected format: "D1;M;D2"
+
+            if (splittedText.Length < 2)
+            {
+                throw new ArgumentException("Le fichier doit contenir au moins deux lignes. " + wrongFirstLineText + " " + wrongSecondLineText);
+            }
 
             string[] splittedFirstLine = splittedText[0].Split(";", StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries);
 
