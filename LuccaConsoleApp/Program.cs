@@ -2,6 +2,8 @@
 
 string? filePath = null;
 
+#region Initialse the path to the file if it has been passed as an argument
+
 if (args.Length == 1)
 {
     filePath = args[0];
@@ -10,11 +12,13 @@ else
 {
     Console.WriteLine("Le programme doit être exécuté avec un seul argument: le chemin vers le fichier contenant les conversions.");
 }
+#endregion
 
 bool isPathValid = File.Exists(filePath);
 
 do
 {
+    #region Get the path to the file
     while (string.IsNullOrWhiteSpace(filePath) || !isPathValid)
     {
         string message = "";
@@ -28,6 +32,7 @@ do
         
         isPathValid = string.IsNullOrWhiteSpace(filePath) || File.Exists(filePath);
     }
+    #endregion
 
     var fileContent = File.ReadAllText(filePath);
 
@@ -52,14 +57,19 @@ do
         Console.WriteLine(exception.Message);
     }
 
+    #region Give the opportunity to the user to continue using the programme
     Console.WriteLine("Voulez-vous quitter le programme? Pressez Y pour quitter, ou n'importe quelle autre touche pour continuer.");
 
     char pressedKey = Console.ReadKey().KeyChar;
     if (pressedKey == 'Y' || pressedKey == 'y')
         break;
 
+    #endregion
+
+    // Reinitialise the variable values for the next iteration of the programme
     filePath = null;
     isPathValid = true;
+
 }
 while (true);
 
