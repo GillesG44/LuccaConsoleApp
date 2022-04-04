@@ -1,0 +1,6 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/LuccaConsoleApp/bin/Release/net6.0
+/LuccaConsoleApp/obj/Release/net6.0

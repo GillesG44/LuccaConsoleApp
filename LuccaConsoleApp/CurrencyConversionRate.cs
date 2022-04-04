@@ -1,5 +1,10 @@
 ﻿namespace LuccaConsoleApp
 {
+ /// <summary>
+ /// Objects of the CurrencyConversionRate contain details of a conversion between two currencies.
+ /// Conversions can be done from currency 1 to currency 2 or the other way around.
+ /// Conversion rates in both ways are either related (e.g. rate and 1/rate) or independent, based on the best conversion rate provided for each conversion.
+ /// </summary>
     internal class CurrencyConversionRate
     {
         #region private Variables

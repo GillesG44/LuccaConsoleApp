@@ -1,8 +1,5 @@
 C:\Users\gille\source\repos\LuccaConsoleApp\LuccaConsoleApp.Tests\bin\Debug\net6.0\CoverletSourceRootsMapping
 C:\Users\gille\source\repos\LuccaConsoleApp\LuccaConsoleApp.Tests\bin\Debug\net6.0\testhost.dll
-C:\Users\gille\source\repos\LuccaConsoleApp\LuccaConsoleApp.Tests\bin\Debug\net6.0\LuccaConsoleApp.deps.json
-C:\Users\gille\source\repos\LuccaConsoleApp\LuccaConsoleApp.Tests\bin\Debug\net6.0\LuccaConsoleApp.runtimeconfig.json
-C:\Users\gille\source\repos\LuccaConsoleApp\LuccaConsoleApp.Tests\bin\Debug\net6.0\LuccaConsoleApp.exe
 C:\Users\gille\source\repos\LuccaConsoleApp\LuccaConsoleApp.Tests\bin\Debug\net6.0\testhost.exe
 C:\Users\gille\source\repos\LuccaConsoleApp\LuccaConsoleApp.Tests\bin\Debug\net6.0\Microsoft.TestPlatform.PlatformAbstractions.dll
 C:\Users\gille\source\repos\LuccaConsoleApp\LuccaConsoleApp.Tests\bin\Debug\net6.0\xunit.runner.visualstudio.dotnetcore.testadapter.dll
@@ -91,8 +88,6 @@ C:\Users\gille\source\repos\LuccaConsoleApp\LuccaConsoleApp.Tests\bin\Debug\net6
 C:\Users\gille\source\repos\LuccaConsoleApp\LuccaConsoleApp.Tests\bin\Debug\net6.0\zh-Hant\Microsoft.TestPlatform.CommunicationUtilities.resources.dll
 C:\Users\gille\source\repos\LuccaConsoleApp\LuccaConsoleApp.Tests\bin\Debug\net6.0\zh-Hant\Microsoft.TestPlatform.CrossPlatEngine.resources.dll
 C:\Users\gille\source\repos\LuccaConsoleApp\LuccaConsoleApp.Tests\bin\Debug\net6.0\zh-Hant\Microsoft.VisualStudio.TestPlatform.Common.resources.dll
-C:\Users\gille\source\repos\LuccaConsoleApp\LuccaConsoleApp.Tests\bin\Debug\net6.0\LuccaConsoleApp.dll
-C:\Users\gille\source\repos\LuccaConsoleApp\LuccaConsoleApp.Tests\bin\Debug\net6.0\LuccaConsoleApp.pdb
 C:\Users\gille\source\repos\LuccaConsoleApp\LuccaConsoleApp.Tests\obj\Debug\net6.0\LuccaConsoleApp.Tests.csproj.AssemblyReference.cache
 C:\Users\gille\source\repos\LuccaConsoleApp\LuccaConsoleApp.Tests\obj\Debug\net6.0\LuccaConsoleApp.Tests.GeneratedMSBuildEditorConfig.editorconfig
 C:\Users\gille\source\repos\LuccaConsoleApp\LuccaConsoleApp.Tests\obj\Debug\net6.0\LuccaConsoleApp.Tests.AssemblyInfoInputs.cache
@@ -103,3 +98,8 @@ C:\Users\gille\source\repos\LuccaConsoleApp\LuccaConsoleApp.Tests\obj\Debug\net6
 C:\Users\gille\source\repos\LuccaConsoleApp\LuccaConsoleApp.Tests\obj\Debug\net6.0\ref\LuccaConsoleApp.Tests.dll
 C:\Users\gille\source\repos\LuccaConsoleApp\LuccaConsoleApp.Tests\obj\Debug\net6.0\LuccaConsoleApp.Tests.pdb
 C:\Users\gille\source\repos\LuccaConsoleApp\LuccaConsoleApp.Tests\obj\Debug\net6.0\LuccaConsoleApp.Tests.genruntimeconfig.cache
+C:\Users\gille\source\repos\LuccaConsoleApp\LuccaConsoleApp.Tests\bin\Debug\net6.0\LuccaDevises.deps.json
+C:\Users\gille\source\repos\LuccaConsoleApp\LuccaConsoleApp.Tests\bin\Debug\net6.0\LuccaDevises.runtimeconfig.json
+C:\Users\gille\source\repos\LuccaConsoleApp\LuccaConsoleApp.Tests\bin\Debug\net6.0\LuccaDevises.exe
+C:\Users\gille\source\repos\LuccaConsoleApp\LuccaConsoleApp.Tests\bin\Debug\net6.0\LuccaDevises.dll
+C:\Users\gille\source\repos\LuccaConsoleApp\LuccaConsoleApp.Tests\bin\Debug\net6.0\LuccaDevises.pdb

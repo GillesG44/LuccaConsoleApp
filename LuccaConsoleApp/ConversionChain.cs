@@ -1,5 +1,9 @@
 ﻿namespace LuccaConsoleApp
 {
+    /// <summary>
+    /// The ConversionChain objects hold information about a chain of conversions (ordered list of conversions, initial currency and final currency)
+    /// They are used to calculate the amount obtained by converting from the inital currency to the final one while going throuhg the entire chain of conversions.
+    /// </summary>
     internal class ConversionChain
     {
         #region Properties

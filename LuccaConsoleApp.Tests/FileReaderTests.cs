@@ -15,7 +15,7 @@ namespace LuccaConsoleApp.Tests
         [Fact]
         public void Initialise_InitialisingWithoutEnoughLine_ThrowsArgumentException()
         {
-            Assert.Throws<ArgumentException>(() => new RequestProcessor( new string[] { "EUR;50;JPY" }));
+            Assert.Throws<ArgumentException>(() => new RequestProcessor(new string[] { "EUR;50;JPY" }));
         }
 
         [Fact]

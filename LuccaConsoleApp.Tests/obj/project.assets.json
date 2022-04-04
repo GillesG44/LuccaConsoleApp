@@ -1671,14 +1671,14 @@
           "build/netcoreapp2.1/xunit.runner.visualstudio.props": {}
         }
       },
-      "LuccaConsoleApp/1.0.0": {
+      "LuccaDevises/1.0.0": {
         "type": "project",
         "framework": ".NETCoreApp,Version=v6.0",
         "compile": {
-          "bin/placeholder/LuccaConsoleApp.dll": {}
+          "bin/placeholder/LuccaDevises.dll": {}
         },
         "runtime": {
-          "bin/placeholder/LuccaConsoleApp.dll": {}
+          "bin/placeholder/LuccaDevises.dll": {}
         }
       }
     }
@@ -5966,7 +5966,7 @@
         "xunit.runner.visualstudio.nuspec"
       ]
     },
-    "LuccaConsoleApp/1.0.0": {
+    "LuccaDevises/1.0.0": {
       "type": "project",
       "path": "../LuccaConsoleApp/LuccaConsoleApp.csproj",
       "msbuildProject": "../LuccaConsoleApp/LuccaConsoleApp.csproj"
@@ -5974,7 +5974,7 @@
   },
   "projectFileDependencyGroups": {
     "net6.0": [
-      "LuccaConsoleApp >= 1.0.0",
+      "LuccaDevises >= 1.0.0",
       "Microsoft.NET.Test.Sdk >= 16.11.0",
       "coverlet.collector >= 3.1.0",
       "xunit >= 2.4.1",
