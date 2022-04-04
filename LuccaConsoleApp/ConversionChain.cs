@@ -2,6 +2,7 @@
 {
     internal class ConversionChain
     {
+        #region Properties
         public string InitialCurrency { get; private set; }
 
         /// <summary>
@@ -9,13 +10,27 @@
         /// </summary>
         public string LastCurrency { get; private set; }
 
+        /// <summary>
+        /// Ordered list of conversions that form the chain.
+        /// </summary>
         public LinkedList<CurrencyConversionRate> ConversionChainList { get; set; } = new LinkedList<CurrencyConversionRate>();
+
+        #endregion
+
+        #region Constructors
         public ConversionChain(string initialCurrency)
         {
             InitialCurrency = initialCurrency;
             LastCurrency = initialCurrency;
         }
+        #endregion
 
+        #region Public Methods
+        /// <summary>
+        /// Add a conversion at the end of the chain
+        /// </summary>
+        /// <param name="currencyConversionRate"></param>
+        /// <exception cref="InvalidOperationException"></exception>
         public void AddConversion(CurrencyConversionRate currencyConversionRate)
         {
             ConversionChainList.AddLast(currencyConversionRate);
@@ -58,6 +73,10 @@
             return amount;
         }
 
+        /// <summary>
+        /// Creates a new chain with the same values as the current one.
+        /// </summary>
+        /// <returns></returns>
         public ConversionChain CopyConversionChain()
         {
             ConversionChain newConversionChain = new ConversionChain(InitialCurrency);
@@ -68,5 +87,6 @@
 
             return newConversionChain;
         }
+        #endregion
     }
 }
