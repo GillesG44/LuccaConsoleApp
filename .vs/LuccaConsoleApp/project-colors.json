@@ -5,7 +5,17 @@
       "ProjectGuid": "ba67bc91-7bf2-4a80-8264-e48f42cfe657",
       "DisplayName": "LuccaConsoleApp",
       "ColorIndex": 0
+    },
+    "65573a51-d506-4bb9-9e51-3437c508b8e7": {
+      "ProjectGuid": "65573a51-d506-4bb9-9e51-3437c508b8e7",
+      "DisplayName": "LuccaConsoleApp.Tests",
+      "ColorIndex": 1
+    },
+    "e4d42f02-df69-4b7e-9a7a-42f35f0dbd18": {
+      "ProjectGuid": "e4d42f02-df69-4b7e-9a7a-42f35f0dbd18",
+      "DisplayName": "LuccaConsoleApp.Tests",
+      "ColorIndex": 2
     }
   },
-  "NextColorIndex": 1
+  "NextColorIndex": 3
 }

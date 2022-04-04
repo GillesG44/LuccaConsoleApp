@@ -4,6 +4,9 @@
     {
         public string InitialCurrency { get; private set; }
 
+        /// <summary>
+        /// Last currency reached with the current chain. The Last Currency is updated every time a conversion gets added to the chain.
+        /// </summary>
         public string LastCurrency { get; private set; }
 
         public LinkedList<CurrencyConversionRate> ConversionChainList { get; set; } = new LinkedList<CurrencyConversionRate>();
@@ -29,10 +32,16 @@
                 throw new InvalidOperationException(String.Format("La devise {0} n'est pas présente parmis les devises du taux d'échange {1}/{2}", LastCurrency, currencyConversionRate.Currency1, currencyConversionRate.Currency2));
         }
 
-        public decimal CalculateNewAmount(decimal initialAmount, string initialCurrency)
+        /// <summary>
+        /// Calculates the amount in the last currency after applying all the conversion in the chain, based on the amount in the initial currency
+        /// </summary>
+        /// <param name="initialAmount"></param>
+        /// <param name="initialCurrency"></param>
+        /// <returns></returns>
+        public decimal CalculateNewAmount(decimal initialAmount)
         {
             decimal amount = initialAmount;
-            string currentCurrency = initialCurrency;
+            string currentCurrency = InitialCurrency;
 
             foreach (var conversion in ConversionChainList)
             {

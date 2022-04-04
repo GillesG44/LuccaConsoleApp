@@ -17,6 +17,12 @@
             Initialise(splittedText);
         }
 
+        /// <summary>
+        /// Initialise the Request processor by reading and validting the lines passed as argument
+        /// </summary>
+        /// <param name="splittedText"></param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentException"></exception>
         public bool Initialise(string[] splittedText)
         {
             // Even though the expected format when reading a file is that no space characters should be included, user errors or hidden characters after copy/paste operations could lead to leading/trailing characters.
@@ -35,14 +41,14 @@
 
             if (splittedFirstLine.Length != 3)
             {
-                throw new InvalidOperationException("Le format de la première ligne n'est pas valide. " + wrongFirstLineText);
+                throw new ArgumentException("Le format de la première ligne n'est pas valide. " + wrongFirstLineText);
             }
 
             InitialCurrency = ReadCurrencyCode(splittedFirstLine[0]);
 
             if (!uint.TryParse(splittedFirstLine[1], out var initialAmount))
             {
-                throw new InvalidOperationException("Le montant indiqué dans la première ligne n'est pas valide. " + wrongFirstLineText);
+                throw new ArgumentException("Le montant indiqué dans la première ligne n'est pas valide. " + wrongFirstLineText);
             }
             InitialAmount = initialAmount;
             TargetCurrency = ReadCurrencyCode(splittedFirstLine[2]);
@@ -60,14 +66,10 @@
             uint numberChangeRates;
             uint.TryParse(splittedText[1], out numberChangeRates);
 
-            if (numberChangeRates == 0)
+            if (numberChangeRates == 0
+                || numberChangeRates + 2 != splittedText.Length)
             {
-                throw new InvalidOperationException(wrongSecondLineText);
-            }
-
-            if (numberChangeRates + 2 != splittedText.Length)
-            {
-                throw new InvalidOperationException(wrongSecondLineText);
+                throw new ArgumentException(wrongSecondLineText);
             }
 
             for (int i = 2; i < splittedText.Length; i++)
@@ -85,15 +87,20 @@
 
             if (splittedCconversionRateLine.Length != 3)
             {
-                throw new InvalidOperationException();
+                throw new ArgumentException();
             }
 
             string initialCurrency = ReadCurrencyCode(splittedCconversionRateLine[0]);
             string targetCurrency = ReadCurrencyCode(splittedCconversionRateLine[1]);
+
+            // Conversions where the initial currency matches the target currency are ignored.
+            if (initialCurrency == targetCurrency)
+                return;
+
             decimal conversionRate;
             if (!decimal.TryParse(splittedCconversionRateLine[2], out conversionRate))
             {
-                throw new InvalidOperationException();
+                throw new ArgumentException();
             }
 
             // Check whether the conversion has already been defined. If it has, update the rates. This prevents duplicates and ensure the best conversion rates are always applied.
@@ -122,7 +129,7 @@
             currencyCode = currencyCode.ToUpperInvariant();
 
             if (currencyCode.Length != 3)
-                throw new InvalidOperationException("Tous les codes des devises doivent être definis comme des codes de 3 lettres majuscules.");
+                throw new ArgumentException("Tous les codes des devises doivent être definis comme des codes de 3 lettres majuscules.");
 
             return currencyCode;
 
@@ -130,7 +137,7 @@
 
         public int CalculateBestRate()
         {
-            // Initialise the conversion chains
+            // Initialise the conversion chains by initiating a chain with all the conversions that contain the InitialCurrency
             var initialConversions = CurrencyConversionList.Where(cc => cc.Currency1 == InitialCurrency || cc.Currency2 == InitialCurrency);
 
             foreach (var currencyConversion in initialConversions)
@@ -140,84 +147,91 @@
                 CurrencyConversionChainList.Add(newConversionChain);
             }
 
+            // Once a conversion has been used, it should be deactivated as only the shorttest chain should be used to calculate the final amount.
             foreach (var conversion in initialConversions)
                 conversion.IsActive = false;
 
-            List<ConversionChain> chainsToBeDeleted;
-            List<ConversionChain> chainsToBeAdded;
+            // The chains of conversion are built through iterations while the target currency hasn't been reached and there are still available conversions.
+            // Each iteration adds one conversion to all the chains
+            // The chains that cannot reach the target currency (no further available conversions) are deleted at every iteration.
+            // New chains may be added may an existing chain has several available conversion to grow it: at the end of evey iteration, there should be one chain per available conversion.
 
-            while (CurrencyConversionList.Any(cc => cc.IsActive))
+            // The addition and deletion of chains is done after every iteration. Those variables store the temporary chains that will be actionned at the end of the iteration.
+            List<ConversionChain> chainsToBeDeletedAfterIteration;
+            List<ConversionChain> chainsToBeAddedAfterIteration;
+
+            while (CurrencyConversionList.Any(cc => cc.IsActive) 
+                    && !CurrencyConversionChainList.Any(ccc => ccc.LastCurrency == TargetCurrency))
             {
-                chainsToBeAdded = new List<ConversionChain>();
-                chainsToBeDeleted = new List<ConversionChain>();
+                chainsToBeAddedAfterIteration = new List<ConversionChain>();
+                chainsToBeDeletedAfterIteration = new List<ConversionChain>();
 
-                IEnumerable<CurrencyConversionRate> usedCurrencyConversions = new List<CurrencyConversionRate>();
+                // The currency conversions used during an iteration should be deactivated at the end of the iteration to ensure they are not reused
+                IEnumerable<CurrencyConversionRate> currencyConversionsUsedDuringIteration = new HashSet<CurrencyConversionRate>();
+
                 foreach (var conversionChain in CurrencyConversionChainList)
                 {
-                    if (conversionChain.LastCurrency == TargetCurrency)
-                        continue;
+                    //Find all the conversions available for the current chain
+                    var nextAvailableConversionsForChain = FindNextConversions(conversionChain);
 
-                    var usedCurrencyConversionsForChain = FindNextConversions(conversionChain).ToList();
-
-                    // Add all the conversions used by the chain to the used conversions, so that they can be reused later: only the shortestpath should be considered as valid
-                    if (usedCurrencyConversionsForChain.Any())
+                    if (nextAvailableConversionsForChain.Any())
                     {
-                        usedCurrencyConversions = usedCurrencyConversions.Union(usedCurrencyConversionsForChain);
+                        // Add all the conversions used by the chain to the set of used conversions, so that they cannot be reused later: only the shortestpath should be considered as valid
+                        currencyConversionsUsedDuringIteration = currencyConversionsUsedDuringIteration.Union(nextAvailableConversionsForChain);
 
-                        for (int i = usedCurrencyConversions.Count() - 1; i >= 0; i--)
+                        for (int i = nextAvailableConversionsForChain.Count - 1; i >= 0; i--)
                         {
                             if (i == 0)
-                                conversionChain.AddConversion(usedCurrencyConversions.ElementAt(i));
+                                conversionChain.AddConversion(nextAvailableConversionsForChain.ElementAt(i));
                             else
                             {
                                 var newChain = conversionChain.CopyConversionChain();
-                                newChain.AddConversion(usedCurrencyConversions.ElementAt(i));
-                                chainsToBeAdded.Add(newChain);
+                                newChain.AddConversion(nextAvailableConversionsForChain.ElementAt(i));
+                                chainsToBeAddedAfterIteration.Add(newChain);
                             }
                         }
                     }
                     // If there are no further possible conversions for the current chain (i.e. no possibility to reach the target currency), then remove the chain from the list of options
                     else
                     {
-                        chainsToBeDeleted.Add(conversionChain);
+                        chainsToBeDeletedAfterIteration.Add(conversionChain);
                     }
                 }
 
-                foreach (var conversionChain in chainsToBeDeleted)
+                foreach (var conversionChain in chainsToBeDeletedAfterIteration)
                     CurrencyConversionChainList.Remove(conversionChain);
 
-                CurrencyConversionChainList.AddRange(chainsToBeAdded);
+                CurrencyConversionChainList.AddRange(chainsToBeAddedAfterIteration);
 
-                if (!usedCurrencyConversions.Any())
+                if (!currencyConversionsUsedDuringIteration.Any())
                 {
                     break;
                 }
                 else
                 {
-                    foreach (var currencyConversion in usedCurrencyConversions)
+                    foreach (var currencyConversion in currencyConversionsUsedDuringIteration)
                     {
                         currencyConversion.IsActive = false;
                     }
                 }
             }
 
+            // Remove all the chains of conversions that don't lead to the target currency
+            CurrencyConversionChainList.RemoveAll(ccc => ccc.LastCurrency != TargetCurrency);
+
+            if (CurrencyConversionChainList.Count == 0)
+                throw new ArgumentException("La devise cible ne peut etre atteinte à partir de la devise initiale avec les conversions disponibles.");
+
             decimal maxResult = 0m;
 
-            // The following line should be included if there is a willingness to do something with the process that leads to the returned amount.
-            // ex.: display all the currency conversions
-            //ConversionChain selectedConversionChain = null;
-
+            // Looks for the optimal conversion chain
             foreach (var conversionChain in CurrencyConversionChainList)
             {
-                var chainResult = conversionChain.CalculateNewAmount(InitialAmount, InitialCurrency);
+                var chainResult = conversionChain.CalculateNewAmount(InitialAmount);
 
                 if (maxResult == 0m || maxResult < chainResult)
                 {
                     maxResult = chainResult;
-                    
-                    // The following line should be included if there is a willingness to do something with the process that leads to the returned amount.
-                    // ex.: display all the currency conversions
-                    //selectedConversionChain = conversionChain;
                 }
             }
 
@@ -225,9 +239,13 @@
 
         }
 
+        /// <summary>
+        /// Find all the available conversions for a chain among active (i.e. unused) conversions
+        /// </summary>
+        /// <param name="conversionChain"></param>
+        /// <returns></returns>
         private List<CurrencyConversionRate> FindNextConversions(ConversionChain conversionChain)
         {
-            // Find all the active Currency Conversions that have the chain last currency as one of their currencies
             var nextConversionList = CurrencyConversionList.Where(c => c.IsActive && (c.Currency1.Equals(conversionChain.LastCurrency) || c.Currency2.Equals(conversionChain.LastCurrency)));
 
             if (!nextConversionList.Any())
